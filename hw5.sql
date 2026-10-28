@@ -57,19 +57,63 @@ BEGIN
 end//
 delimiter ;
 
+INSERT INTO Department(name) VALUES
+('HR'),
+('RD'),
+('SALES');
+
+INSERT INTO Employee VALUES
+(123, 'John', 56000, 'RD'),
+(578, 'Robert', 37500, 'HR'),
+(666, 'Jenny', 46000, 'HR'),
+(222, 'Christ', 39000, 'SALES'),
+(888, 'Bill', 50000, 'RD'),
+(101, 'Susan', 67500, 'RD');
+
+UPDATE Department
+SET managerID = 666
+WHERE name = 'HR';
+
+UPDATE Department
+SET managerID = 888
+WHERE name = 'RD';
+
+UPDATE Department
+SET managerID = 222
+WHERE name = 'SALES';
+
+-- 2
+INSERT INTO Employee VALUES (777, 'Mike', 18000, 'HR');
 /*
-2. The insert will result in an error because the salary is below 20000 and the
-   deptName is HR. This will activate the trigger hr_salary_insert defined above.
+This insert results in an error because the salary is below 20000 and the
+deptName is HR. This will activate the trigger hr_salary_insert defined above.
+*/
 
-3. When department SALES is deleted, it sets all values of deptName in the Employee table
-   that were SALES to null. So employee 222 will have deptName null after the deletion.
-   This is enforced by the foreign key constraint fk_deptName above with ON DELETE SET NULL.
+-- 3
+DELETE FROM Department
+WHERE name = 'SALES';
+/*
+When department SALES is deleted, it sets all values of deptName in the Employee table
+that were SALES to null. So employee 222 will have deptName null after the deletion.
+This is enforced by the foreign key constraint fk_deptName above with ON DELETE SET NULL.
+*/
 
-4. When employee 666 is deleted, it sets the managerID of the department with that
-   employee as its manager to null. So department HR will have managerID null after
-   the deletion. This is enforced by the foreign key constraint fk_manager_employee
-   in the department table definition above with ON DELETE SET NULL.
+-- 4
+DELETE FROM Employee
+WHERE ID = 666;
+/*
+When employee 666 is deleted, it sets the managerID of the department with that
+employee as its manager to null. So department HR will have managerID null after
+the deletion. This is enforced by the foreign key constraint fk_manager_employee
+in the department table definition above with ON DELETE SET NULL.
+*/
 
-5. When department HR is renamed to Human Resources, the update cascades to the employees
-   with deptName HR. So employees 578 and 666 will have deptName Human Resources after the
-   update. This is enforced by fk_deptName, with ON UPDATE CASCADE.
+-- 5
+UPDATE Department
+SET name = 'Human Resources'
+WHERE name = 'HR';
+/*
+When department HR is renamed to Human Resources, the update cascades to the employees
+with deptName HR. So employees 578 and 666 will have deptName Human Resources after the
+update. This is enforced by fk_deptName, with ON UPDATE CASCADE.
+*/
